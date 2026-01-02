@@ -25,9 +25,8 @@ var allContact = [];
 
 if (localStorage.getItem("all") !== null) {
   allContact = JSON.parse(localStorage.getItem("all"));
-  displayContact();
 }
-
+displayContact();
 closeBtn.addEventListener("click", function () {
   clearForm();
 });
@@ -386,13 +385,23 @@ function searchName(term) {
                   <i class="fa-solid fa-navicon text-white"></i>
                 </div>
 
-                <div class="top position-absolute rounded-5">
-                  <i class="fa-solid fa-star text-white"></i>
-                </div>
+                ${
+                  allContact[i].isFavorite
+                    ? `
+                            <div class="top position-absolute rounded-5">
+                              <i class="fa-solid fa-star text-white"></i>
+                            </div>`
+                    : ""
+                }
 
-                <div class="bottom position-absolute">
-                  <i class="fa-solid fa-heart-pulse text-white"></i>
-                </div>
+                          ${
+                            allContact[i].isEmergency
+                              ? `
+                            <div class="bottom position-absolute">
+                              <i class="fa-solid fa-heart-pulse text-white"></i>
+                            </div>`
+                              : ""
+                          }
               </div>
 
               <div class="ps-3">
@@ -479,7 +488,19 @@ function searchName(term) {
       `;
     }
   }
-
+  if (cartoona === "") {
+    cartoona = `
+    <div class="col-12 text-center py-5">
+      <div class="d-flex align-items-center justify-content-center mx-auto mb-4 bg-secondary-subtle rounded-4" style="width: 80px; height: 80px;">
+        <i class="fas fa-address-book text-secondary fs-4"></i>
+      </div>
+      <p class="text-muted fw-semibold mb-1">No contacts found</p>
+      <p class="text-secondary small">
+        Click <strong>"Add Contact"</strong> to get started
+      </p>
+    </div>
+  `;
+  }
   document.querySelector(".card-inner").innerHTML = cartoona;
 }
 
