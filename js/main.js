@@ -382,7 +382,21 @@ function searchName(term) {
             <div class="d-flex p-3">
               <div class="position-relative">
                 <div class="name-info p-2 rounded-3">
-                  <i class="fa-solid fa-navicon text-white"></i>
+                  ${
+                    allContact[i].image
+                      ? `<img src="${allContact[i].image}" alt="${allContact[i].fullName}" class= "rounded-3 w-100 h-100"/>`
+                      : `<span class="text-white fw-bold">
+                                      ${(allContact[i].fullName || "NA")
+                                        .trim()
+                                        .split(" ")[0][0]
+                                        .toUpperCase()}
+                                      ${(allContact[i].fullName || "NA")
+                                        .trim()
+                                        .split(" ")
+                                        .slice(-1)[0][0]
+                                        .toUpperCase()}
+                                    </span>`
+                  }
                 </div>
 
                 ${
