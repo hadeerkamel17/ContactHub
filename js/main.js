@@ -358,164 +358,129 @@ saveContactBtn.addEventListener("click", function (e) {
 });
 
 function searchName(term) {
+  term = (term || "").trim().toLowerCase();
+
+  if (term === "") {
+    displayContact();
+    return;
+  }
+
   var cartoona = "";
   for (var i = 0; i < allContact.length; i++) {
-    var name = allContact[i].fullName.toLowerCase();
-    var phone = allContact[i].phoneNumber.toLowerCase();
-    var mail = allContact[i].emailAddress.toLowerCase();
-    if (
-      name.includes(term.toLowerCase()) ||
-      phone.includes(term.toLowerCase()) ||
-      mail.includes(term.toLowerCase())
-    ) {
+    var name = (allContact[i].fullName || "").toLowerCase();
+    var phone = (allContact[i].phoneNumber || "").toLowerCase();
+    var mail = (allContact[i].emailAddress || "").toLowerCase();
+
+    if (name.includes(term) || phone.includes(term) || mail.includes(term)) {
+      var colors = allContact[i].group
+        ? getGroupColor(allContact[i].group)
+        : { bg: "#f3f4f6", text: "#374151", border: "#d1d5db" };
+
       cartoona += `
               
                     <div class="col-12 col-sm-6 position-relative">
-                      <div class="card rounded-3">
-                        <div class="d-flex p-3">
-                          <div class="position-relative">
-                            <div class="name-info p-2 rounded-3">
-                              ${
-                                allContact[i].image
-                                  ? `<img src="${allContact[i].image}" alt="${allContact[i].fullName}" />`
-                                  : `<span class="text-white fw-bold">
-                                    ${(allContact[i].fullName || "NA")
-                                      .trim()
-                                      .split(" ")[0][0]
-                                      .toUpperCase()}
-                                    ${(allContact[i].fullName || "NA")
-                                      .trim()
-                                      .split(" ")
-                                      .slice(-1)[0][0]
-                                      .toUpperCase()}
-                                  </span>`
-                              }
-                            </div>
-                            ${
-                              allContact[i].isFavorite
-                                ? `
-                            <div class="top position-absolute rounded-5">
-                              <i class="fa-solid fa-star text-white"></i>
-                            </div>`
-                                : ""
-                            }
+          <div class="card rounded-3">
+            <div class="d-flex p-3">
+              <div class="position-relative">
+                <div class="name-info p-2 rounded-3">
+                  <i class="fa-solid fa-navicon text-white"></i>
+                </div>
 
-                          ${
-                            allContact[i].isEmergency
-                              ? `
-                            <div class="bottom position-absolute">
-                              <i class="fa-solid fa-heart-pulse text-white"></i>
-                            </div>`
-                              : ""
-                          }
-                          </div>
-                          <div class="ps-3">
-                            <p class="name mb-1 ps-2 fw-bold text-black">
-                              ${allContact[i].fullName}
-                            </p>
-                            <div class="d-flex">
-                              <div
-                                class="phone-icon align-self-start rounded-3"
-                              >
-                                <i class="fa-solid fa-phone"></i>
-                              </div>
-                              <p class="phone align-self-center ps-2">
-                                ${allContact[i].phoneNumber}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        ${
-                          allContact[i].emailAddress
-                            ? `
-                          <div class="d-flex align-items-start ps-3 pe-3">
-                          <div class="message-icon rounded-2">
-                            <i class="fa-solid fa-envelope"></i>
-                          </div>
-                          <div class="ps-2">
-                            <p>${allContact[i].emailAddress}</p>
-                          </div>
-                        </div>
-                          `
-                            : ""
-                        }
-                        
-                        ${
-                          allContact[i].address
-                            ? `
-                          <div class="d-flex align-items-start ps-3 pe-3">
-                          <div class="address-icon rounded-2">
-                            <i class="fa-solid fa-location-dot"></i>
-                          </div>
-                          <div class="ps-2">
-                            <p>${allContact[i].address}</p>
-                          </div>
-                        </div>
-                          `
-                            : ""
-                        }
+                <div class="top position-absolute rounded-5">
+                  <i class="fa-solid fa-star text-white"></i>
+                </div>
 
-                        ${
-                          allContact[i].group
-                            ? `
-                                        <span class="contact-tag d-inline-flex align-items-center" 
-                                        style="background-color: ${colors.bg}; color: ${colors.text}; 
-                                        border-color: ${colors.border};">${allContact[i].group}
-                                        </span>
-                                        
-                                        `
-                            : ""
-                        }
-                        <div
-                          class="icon-all p-3 d-flex justify-content-between"
-                        >
-                          <div>
-                            <a
-                              href="tel:${allContact[i].phoneNumber}"
-                              class="tel-icon p-2 rounded-3 me-2"
-                            >
-                              <i class="fa-solid fa-phone"></i>
-                            </a>
-                            <a
-                              href="mailto:${allContact[i].emailAddress}"
-                              class="mess-icon p-2 rounded-3 me-2"
-                            >
-                              <i class="fa-solid fa-envelope"></i>
-                            </a>
-                          </div>
-                          
+                <div class="bottom position-absolute">
+                  <i class="fa-solid fa-heart-pulse text-white"></i>
+                </div>
+              </div>
 
-                          <div class="d-flex align-items-start">
-                            <div class="star-icon rounded-3 me-2" onclick="toggleFav(${i})">
-                              <i class="${
-                                allContact[i].isFavorite
-                                  ? "fa-solid"
-                                  : "fa-regular"
-                              } fa-star"></i>
-                            </div>
-                            <div class="heart-icon rounded-3 me-2" onclick="toggleEmerg(${i})">
-                              <i class="${
-                                allContact[i].isEmergency
-                                  ? "fa-solid"
-                                  : "fa-regular"
-                              } fa-heart"></i>
-                            </div>
-                            <div class="edit-icon rounded-3 me-2">
-                              <i onclick="preUpdateContact(${i})" class="fa-solid fa-pen"></i>
-                            </div>
-                            <div class="delete-icon rounded-3 me-2">
-                              <i onclick="deleteContact(${i})" class="fa-solid fa-trash"></i>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      </div>
-                  
-    `;
+              <div class="ps-3">
+                <p class="name mb-1 ps-2 fw-bold text-black">
+                  ${allContact[i].fullName}
+                </p>
+                <div class="d-flex">
+                  <div class="phone-icon align-self-start rounded-3">
+                    <i class="fa-solid fa-phone"></i>
+                  </div>
+                  <p class="phone align-self-center ps-2">
+                    ${allContact[i].phoneNumber}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            ${
+              allContact[i].emailAddress
+                ? `
+              <div class="d-flex align-items-start ps-3 pe-3">
+                <div class="message-icon rounded-2">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="ps-2">
+                  <p>${allContact[i].emailAddress}</p>
+                </div>
+              </div>`
+                : ""
+            }
+
+            ${
+              allContact[i].address
+                ? `
+              <div class="d-flex align-items-start ps-3 pe-3">
+                <div class="address-icon rounded-2">
+                  <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div class="ps-2">
+                  <p>${allContact[i].address}</p>
+                </div>
+              </div>`
+                : ""
+            }
+
+            ${
+              allContact[i].group
+                ? `
+              <span class="contact-tag d-inline-flex align-items-center"
+                style="background-color:${colors.bg}; color:${colors.text}; border-color:${colors.border};">
+                ${allContact[i].group}
+              </span>`
+                : ""
+            }
+
+            <div class="icon-all p-3 d-flex justify-content-between">
+              <div>
+                <a href="tel:${
+                  allContact[i].phoneNumber
+                }" class="tel-icon p-2 rounded-3 me-2">
+                  <i class="fa-solid fa-phone"></i>
+                </a>
+                <a href="mailto:${
+                  allContact[i].emailAddress
+                }" class="mess-icon p-2 rounded-3 me-2">
+                  <i class="fa-solid fa-envelope"></i>
+                </a>
+              </div>
+
+              <div class="d-flex align-items-start">
+                <div class="star-icon rounded-3 me-2"><i class="fa-regular fa-star"></i></div>
+                <div class="heart-icon rounded-3 me-2"><i class="fa-regular fa-heart"></i></div>
+
+                <div class="edit-icon rounded-3 me-2">
+                  <i onclick="preUpdateContact(${i})" class="fa-solid fa-pen"></i>
+                </div>
+                <div class="delete-icon rounded-3 me-2">
+                  <i onclick="deleteContact(${i})" class="fa-solid fa-trash"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     }
-
-    document.querySelector(".card-inner").innerHTML = cartoona;
   }
+
+  document.querySelector(".card-inner").innerHTML = cartoona;
 }
 
 function getGroupColor(group) {
